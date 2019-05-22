@@ -41,6 +41,8 @@ app.on('ready', function() {
     // 最前面のトグル
     mainWindow.setAlwaysOnTop(disableMouse);
     mainWindow.focus();
+    var color = disableMouse ? 'black' : 'blue';
+    mainWindow.webContents.executeJavaScript(`setBodyBorderColor("${color}")`);
   });
   mainWindow = new BrowserWindow({
     webPreferences: {
@@ -60,7 +62,7 @@ app.on('ready', function() {
   });
   mainWindow.loadURL(`file://${__dirname}/frame.html?{}`);
   // デフォルトのメニューを上書き
-  Menu.setApplicationMenu(menu)
+  Menu.setApplicationMenu(menu);
   
   mainWindow.on('closed', function() {
     mainWindow = null;
