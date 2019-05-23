@@ -26,7 +26,12 @@
       </div>
 
       <div class="mr10 py4">
-        <div class="fs10 text-center mb4 f">height: <input id="height" class="w60 input bg-white fs10 p0" type="number" pattern="\d" oninput="changeHeight(event)"></div>
+        <div class="fs10 text-center mb4 f fm">
+          height: <input id="height" class="mr4 w50 input bg-white fs10 p0" type="number" pattern="\d" oninput="changeHeight(event)">
+          <label>
+            <input type="checkbox" class="mr2" id="autoHeight" checked> auto
+          </label>
+        </div>
         <input type="range" id="rangeHeight" min="300" max="3000" step="5" oninput="changeHeight(event)">
       </div>
 
@@ -68,6 +73,7 @@
       'rangeWidth',
       'rangeHeight',
       'form',
+      'autoHeight',
     ].forEach(id => {
       window[id] = document.getElementById(id);
     });
@@ -98,6 +104,13 @@
       f.style.transform = `scale(${e.currentTarget.value})`;
       scale.textContent = e.currentTarget.value;
       query.scale = e.currentTarget.value;
+      if (autoHeight.checked) {
+        changeHeight({
+          currentTarget: {
+            value: wrapper.offsetHeight / query.scale,
+          },
+        });
+      }
       save();
     };
     changeWidth = (e) => {
