@@ -9,23 +9,34 @@
 </head>
 <body>
   <div class="f flex-column fm h100per w100vw">
-    <form class="f w-full bg-white flex-fixed px15" id="form">
-      <input type="input text" class="w-full mr10" placeholder="URLを入力" id="i">
-      <div class="mr10">
+    <form class="f w-full bg-whitesmoke flex-fixed px10" id="form">
+      <input type="url" class="input bg-white fs14 w50per mr10" placeholder="URLを入力" id="i">
+      <div class="mr10 py4">
         <div class="fs10 text-center mb4">alpha: <span id="alpha">0.5</span></div>
-        <input type="range" id="rangeAlpha" min="0" max="1" step="0.01" value="0.5" oninput="changeOpacity(event)">
+        <input class="w70" type="range" id="rangeAlpha" min="0" max="1" step="0.01" value="0.5" oninput="changeOpacity(event)">
       </div>
-      <div class="mr10">
+      <div class="mr10 py4">
         <div class="fs10 text-center mb4">scale: <span id="scale">1</span></div>
-        <input type="range" id="rangeScale" min="0.1" max="1" step="0.1" value="1" oninput="changeScale(event)">
+        <input class="w70" type="range" id="rangeScale" min="0.1" max="1" step="0.1" value="1" oninput="changeScale(event)">
       </div>
-      <div class="mr10">
-        <div class="fs10 text-center mb4">width: <span id="width">1024</span></div>
-        <input type="range" id="rangeWidth" min="320" max="1600" step="5" value="1024" oninput="changeWidth(event)">
+      <div class="mr10 py4">
+        <div class="fs10 text-center mb4 f">width: <input id="width" class="w50 input bg-white fs10 p0" type="number" pattern="\d" value="1024" oninput="changeWidth(event)"></div>
+        <input class="w100" type="range" id="rangeWidth" min="320" max="1600" step="5" value="1024" oninput="changeWidth(event)">
       </div>
+
+      <div class="mr10 py4">
+        <div class="fs10 text-center mb4 f">height: <input id="height" class="w60 input bg-white fs10 p0" type="number" pattern="\d" oninput="changeHeight(event)"></div>
+        <input type="range" id="rangeHeight" min="300" max="3000" step="5" oninput="changeHeight(event)">
+      </div>
+
     </form>
-    <webview autosize src="http://localhost:3000" id="f" class="s-full" frameborder="0"></webview>
+    <div class="s-full" id="wrapper">
+      <webview autosize src="http://localhost:3000" id="f" class="s-full"></webview>
+    </div>
     <style>
+      #wrapper {
+        transform-origin: top center;
+      }
       webview {
         opacity: 0.5;
         transform-origin: top center;
@@ -44,9 +55,21 @@
   </div>
 
   <script>
-    var f = document.getElementById('f');
-    var alpha = document.getElementById('alpha');
-    var scale = document.getElementById('scale');
+    [
+      'f',
+      'wrapper',
+      'alpha',
+      'scale',
+      'width',
+      'height',
+      'rangeAlpha',
+      'rangeScale',
+      'rangeWidth',
+      'rangeHeight',
+    ].forEach(id => {
+      window[id] = document.getElementById(id);
+    });
+
     var query = JSON.parse(decodeURIComponent(location.search.slice(1)));
     setBodyBorderColor = (color) => {
       document.body.style.borderColor = color;
@@ -76,20 +99,32 @@
       save();
     };
     changeWidth = (e) => {
-      f.style.width = `${e.currentTarget.value}px`;
-      width.textContent = e.currentTarget.value;
+      wrapper.style.width = `${e.currentTarget.value}px`;
+      width.value = e.currentTarget.value;
+      rangeWidth.value = e.currentTarget.value;
       query.width = e.currentTarget.value;
+      save();
+    };
+    changeHeight = (e) => {
+      f.style.height = `${e.currentTarget.value}px`;
+      height.value = e.currentTarget.value;
+      rangeHeight.value = e.currentTarget.value;
+      query.height = e.currentTarget.value;
       save();
     };
     f.src = query.url = query.url || "http://localhost:3000";
     alpha.textContent = query.alpha = query.alpha || '0.5';
     scale.textContent = query.scale = query.scale || '1';
-    width.textContent = query.width = query.width || innerWidth + '';
+    width.value = query.width = query.width || innerWidth + '';
+    height.value = query.height = query.height || wrapper.offsetHeight + '';
     f.style.opacity = query.alpha;
     f.style.transform = `scale(${query.scale})`;
-    document.getElementById('rangeAlpha').value = query.alpha;
-    document.getElementById('rangeScale').value = query.scale;
-    document.getElementById('rangeWidth').value = query.width;
+    wrapper.style.width = `${width.value}px`;
+    f.style.height = `${height.value}px`;
+    rangeAlpha.value = query.alpha;
+    rangeScale.value = query.scale;
+    rangeWidth.value = query.width;
+    rangeHeight.value = query.height;
   </script>
 
 </body>
