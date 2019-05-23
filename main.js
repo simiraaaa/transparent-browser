@@ -2,24 +2,7 @@ const {
   app,
   BrowserWindow,
   globalShortcut,
-  Menu,
 } = require('electron');
-
-let template = [
-  {
-    label: app.getName(), submenu: [
-      {
-        label: 'Reload', accelerator: 'CommandOrControl+R', click() {
-          mainWindow.webContents.executeJavaScript('reload()');
-        }
-      },
-      { type: 'separator' },
-      { role: 'quit' }
-    ]
-  }
-];
-
-const menu = Menu.buildFromTemplate(template)
 
 let mainWindow = null;
 
@@ -61,8 +44,6 @@ app.on('ready', function() {
     // frame: false,
   });
   mainWindow.loadURL(`file://${__dirname}/frame.html?{}`);
-  // デフォルトのメニューを上書き
-  Menu.setApplicationMenu(menu);
   
   mainWindow.on('closed', function() {
     mainWindow = null;

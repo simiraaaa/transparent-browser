@@ -10,7 +10,7 @@
 <body>
   <div class="f flex-column fm h100per w100vw">
     <form class="f w-full bg-whitesmoke flex-fixed px10" action="/" id="form">
-      <input type="url" class="input bg-white fs14 w50per mr10" placeholder="URLを入力" id="i">
+      <input type="url" class="input bg-white fs14 w50per mr10" placeholder="URLを入力" id="url">
       <button class="hide"></button>
       <div class="mr10 py4">
         <div class="fs10 text-center mb4">alpha: <span id="alpha">0.5</span></div>
@@ -63,6 +63,7 @@
   <script>
     [
       'f',
+      'url',
       'wrapper',
       'alpha',
       'scale',
@@ -90,7 +91,7 @@
     };
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      f.src = document.getElementById('i').value;
+      f.src = url.value;
       query.url = f.src;
       save();
     });
@@ -140,6 +141,43 @@
     rangeScale.value = query.scale;
     rangeWidth.value = query.width;
     rangeHeight.value = query.height;
+
+    onkeydown = (e) => {
+      var fm = {};
+      var call = () => {
+        var f = fm[e.key];
+        f && f();
+      };
+      if (e.metaKey) {
+        // meta + Shift
+        if (e.shiftKey) {
+          fm = {
+            r() {
+              e.preventDefault();
+              reload();
+            },
+          };
+          return call();
+        }
+        // meta
+        fm = {
+          r() {
+            e.preventDefault();
+            reload();
+          },
+        };
+        return call();
+      }
+    };
+    f.addEventListener('dom-ready', () => {
+      url.value = f.getURL();
+      f.getWebContents().executeJavaScript(`window.addEventListener('keydown', (e) => {
+        var reload = () => {
+          location.reload();
+        };
+        (${onkeydown.toString()})(e);
+      });`);
+    });
   </script>
 
 </body>
