@@ -29,7 +29,7 @@
         <div class="fs10 text-center mb4 f fm">
           height: <input id="height" class="mr4 w50 input bg-white fs10 p0" type="number" pattern="\d" oninput="changeHeight(event)">
           <label>
-            <input type="checkbox" class="mr2" id="autoHeight" checked> auto
+            <input type="checkbox" class="mr2" id="autoHeight" checked onchange="changeAutoHeight(event)"> auto
           </label>
         </div>
         <input type="range" id="rangeHeight" min="300" max="3000" step="5" oninput="changeHeight(event)">
@@ -128,6 +128,17 @@
       query.height = e.currentTarget.value;
       save();
     };
+    changeAutoHeight = (e) => {
+      var t = e.currentTarget;
+      if (t.checked) {
+        changeHeight({
+          currentTarget: {
+            value: wrapper.offsetHeight / query.scale,
+          },
+        });
+      }
+    };
+
     f.src = query.url = query.url || "http://localhost:3000";
     alpha.textContent = query.alpha = query.alpha || '0.5';
     scale.textContent = query.scale = query.scale || '1';
