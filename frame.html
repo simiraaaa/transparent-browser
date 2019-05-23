@@ -37,7 +37,7 @@
 
     </form>
     <div class="s-full" id="wrapper">
-      <webview autosize src="http://localhost:3000" id="f" class="s-full"></webview>
+      <webview autosize src="http://localhost:3000" id="f" class="s-full" preload="preload.js"></webview>
     </div>
     <style>
       #wrapper {
@@ -139,6 +139,16 @@
       }
     };
 
+    toggleDevTools = () => {
+      if (f.isDevToolsOpened()) {
+        f.closeDevTools();
+      }
+      else {
+        f.openDevTools();
+      }
+    };
+
+    // init
     f.src = query.url = query.url || "http://localhost:3000";
     alpha.textContent = query.alpha = query.alpha || '0.5';
     scale.textContent = query.scale = query.scale || '1';
@@ -154,12 +164,26 @@
     rangeHeight.value = query.height;
 
     onkeydown = (e) => {
+      // neutral
       var fm = {};
+      var keyCode = e.keyCode;
+      var keyFromKeyCode = String.fromCharCode(keyCode).toLocaleLowerCase();
+      var callKey = e.key;
       var call = () => {
-        var f = fm[e.key];
+        var f = fm[callKey];
         f && f();
       };
       if (e.metaKey) {
+        if (e.altKey) {
+          callKey = keyFromKeyCode;
+          fm = {
+            i() {
+              e.preventDefault();
+              toggleDevTools();
+            },
+          };
+          return call();
+        }
         // meta + Shift
         if (e.shiftKey) {
           fm = {
@@ -179,6 +203,14 @@
         };
         return call();
       }
+      if (e.metaKey || e.ctrlKey || e.altKey) return ;
+      fm = {
+        F12() {
+          e.preventDefault();
+          toggleDevTools();
+        },
+      };
+      call();
     };
     f.addEventListener('dom-ready', () => {
       url.value = f.getURL();
@@ -188,6 +220,15 @@
         };
         (${onkeydown.toString()})(e);
       });`);
+    });
+    f.addEventListener('ipc-message', (event) => {
+      var fm = {
+        call(func) {
+          window[func]();
+        },
+      };
+      var f = fm[event.channel];
+      f && f.apply(null, event.args);
     });
   </script>
 
