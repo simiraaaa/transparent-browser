@@ -24,8 +24,7 @@ app.on('ready', function() {
     // 最前面のトグル
     mainWindow.setAlwaysOnTop(disableMouse);
     mainWindow.focus();
-    var color = disableMouse ? 'black' : 'blue';
-    mainWindow.webContents.executeJavaScript(`setBodyBorderColor("${color}")`);
+    mainWindow.webContents.executeJavaScript(`setDisableMouse(${disableMouse})`);
   });
   mainWindow = new BrowserWindow({
     webPreferences: {

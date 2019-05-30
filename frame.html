@@ -9,7 +9,7 @@
 </head>
 <body>
   <div class="f flex-column fm h100per w100vw">
-    <form class="f w-full bg-whitesmoke flex-fixed px10" action="/" id="form">
+    <form class="f w-full flex-fixed px10" action="/" id="form" data-disable_mouse="false">
       <input type="url" class="input bg-white fs14 w50per mr10" placeholder="URLを入力" id="url">
       <button class="hide"></button>
       <div class="mr10 py4">
@@ -40,6 +40,17 @@
       <webview autosize src="http://localhost:3000" id="f" class="s-full" preload="preload.js"></webview>
     </div>
     <style>
+      form[data-disable_mouse=false] {
+        background-color: whitesmoke;
+      }
+      form[data-disable_mouse=true] {
+        background-color: gray;
+        color: white;
+        opacity: 0.5;
+      }
+      form[data-disable_mouse=true] input {
+        color: black;
+      }
       #wrapper {
         transform-origin: top center;
       }
@@ -80,7 +91,12 @@
     });
 
     var query = JSON.parse(decodeURIComponent(location.search.slice(1)));
-    setBodyBorderColor = (color) => {
+    setDisableMouse = (disable) => {
+      var color = 'black';
+      form.dataset.disable_mouse = '' + disable;
+      if (!disable) {
+        color = 'blue';
+      }
       document.body.style.borderColor = color;
     };
     reload = () => {
