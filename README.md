@@ -14,5 +14,5 @@
 
 - `command + R` (アクティブ時) リロード 
 - `command + M` (グローバル) ウィンドウをアクティブにして、マウスの無効と最前面に固定 (もう一回押すともとに戻る)
-
+- `command + I` or `F12` developer tools
 
