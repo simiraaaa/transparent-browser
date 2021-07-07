@@ -154,6 +154,13 @@
         });
       }
     };
+    onresize = e => {
+      changeHeight({
+        currentTarget: {
+          value: wrapper.offsetHeight / query.scale,
+        },
+      });
+    };
 
     toggleDevTools = () => {
       if (f.isDevToolsOpened()) {
