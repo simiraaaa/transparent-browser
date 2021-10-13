@@ -10,7 +10,7 @@
   "author": "simiraaaa",
   "license": "MIT",
   "dependencies": {
-    "electron": "^13.1.6"
+    "electron": "^13.3.0"
   },
   "repository": {
     "type": "git",
