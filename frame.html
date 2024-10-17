@@ -36,8 +36,9 @@
       </div>
 
     </form>
-    <div class="s-full" id="wrapper">
+    <div class="s-full relative" id="wrapper">
       <webview autosize src="http://localhost:3000" id="f" class="s-full" preload="preload.js"></webview>
+      <div id="overlay"></div>
     </div>
     <style>
       form[data-disable_mouse=false] {
@@ -46,7 +47,7 @@
       form[data-disable_mouse=true] {
         background-color: gray;
         color: white;
-        opacity: 0.5;
+        opacity: 0.1;
       }
       form[data-disable_mouse=true] input {
         color: black;
@@ -68,6 +69,14 @@
         height: 100%;
         overflow: hidden;
       }
+      #overlay {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
     </style>
   </div>
 
@@ -76,6 +85,7 @@
       'f',
       'url',
       'wrapper',
+      'overlay',
       'alpha',
       'scale',
       'width',
@@ -90,12 +100,24 @@
       window[id] = document.getElementById(id);
     });
 
+    document.body.onmouseenter = () => {
+      if (form.dataset.disable_mouse !== 'true') return ;
+      document.body.style.opacity = '0.1';
+    };
+
+    document.body.onmouseleave = () => {
+      if (form.dataset.disable_mouse !== 'true') return ;
+      document.body.style.opacity = '1';
+    };
+
     var query = JSON.parse(decodeURIComponent(location.search.slice(1)));
     setDisableMouse = (disable) => {
       var color = 'black';
       form.dataset.disable_mouse = '' + disable;
+      overlay.style.display = disable ? 'block' : 'none';
       if (!disable) {
         color = 'blue';
+        document.body.style.opacity = '1';
       }
       document.body.style.borderColor = color;
     };
