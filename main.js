@@ -25,6 +25,11 @@ app.on('ready', function() {
     mainWindow.setAlwaysOnTop(disableMouse);
     mainWindow.focus();
     mainWindow.webContents.executeJavaScript(`setDisableMouse(${disableMouse})`);
+    if (!disableMouse) {
+      setTimeout(() => {
+        mainWindow.moveTop();
+      }, 32);
+    }
   });
   mainWindow = new BrowserWindow({
     webPreferences: {
@@ -39,11 +44,12 @@ app.on('ready', function() {
     transparent: true,
     // 影なし
     hasShadow: false,
-    
+
     // frame: false,
   });
+  mainWindow.setAlwaysOnTop(true);
   mainWindow.loadURL(`file://${__dirname}/frame.html?{}`);
-  
+
   mainWindow.on('closed', function() {
     mainWindow = null;
     app.quit();
